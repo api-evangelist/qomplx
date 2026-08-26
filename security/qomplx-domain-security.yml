@@ -1,0 +1,49 @@
+generated: '2026-08-26'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.qomplx.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 16 07:42:38 2026 GMT
+  hsts: false
+domains:
+- domain: qomplx.com
+  dnssec: false
+  caa: []
+  spf: false
+  dmarc: false
+notes:
+  verified_independently: >-
+    Re-checked with dig on 2026-08-26. qomplx.com carries Google Workspace MX records
+    (aspmx.l.google.com et al.) and two TXT verification records (Atlassian, Box), but publishes
+    NO SPF record, NO _dmarc TXT record, NO CAA record and no DNSSEC. www.qomplx.com serves no
+    Strict-Transport-Security header. All five absences are the observed state, not a probe
+    failure.
+  significance: >-
+    QOMPLX sells identity-threat detection, managed detection and response, and attack-surface
+    monitoring. A mail domain with live MX and no SPF or DMARC is spoofable, and it is the same
+    class of exposure the company's own attack-surface product is sold to find.
+  vulnerability_disclosure:
+    published: advertised-but-unreachable
+    security_txt:
+      url: https://www.qomplx.com/.well-known/security.txt
+      status: 404
+    pages:
+    - url: https://www.qomplx.com/vulnerability-disclosure-policy/
+      status: 301
+      result: self-redirect loop; unreadable
+    - url: https://www.qomplx.com/bug-bounties/
+      status: 301
+      result: self-redirect loop; unreadable
+    note: >-
+      QOMPLX lists both a vulnerability-disclosure policy and a bug-bounties page in its own
+      sitemap, so the program is intended to be public, but neither document can be retrieved. No
+      Security, SecurityTxt or VulnerabilityDisclosure pointer is emitted in apis.yml — pointing
+      at an unreachable page would assert a program a researcher cannot actually read.
+  trust_center:
+    published: false
+    probes:
+    - url: https://trust.qomplx.com/
+      status: 0
+      result: DNS does not resolve

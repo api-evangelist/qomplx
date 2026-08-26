@@ -1,0 +1,104 @@
+generated: '2026-08-26'
+method: searched
+source: https://github.com/QOMPLX-INC
+name: QOMPLX packages and client libraries
+summary: >-
+  QOMPLX publishes three first-party client libraries for its TimeEngine (mdtsdb) HTTP API —
+  Python, Java and Erlang — plus a sample-use-case repository. None of them is published to a
+  public package registry: PyPI, Maven Central, RubyGems, crates.io, npm and Hex were all
+  queried unauthenticated and returned no QOMPLX package. Distribution is source-only from
+  GitHub, and every library carries "Copyright 2015-2021 -- QOMPLX, Inc. -- All Rights
+  Reserved. No License Granted." (GitHub reports the license as NOASSERTION), so these are
+  published-but-unlicensed clients rather than open-source SDKs.
+registry_probes:
+- registry: pypi
+  query: https://pypi.org/pypi/mdtsdb/json
+  status: 404
+- registry: pypi
+  query: https://pypi.org/pypi/timeengine/json
+  status: 404
+- registry: maven-central
+  query: https://search.maven.org/solrsearch/select?q=g:%22com.qomplx.mdtsdb%22
+  status: 200
+  result: numFound 0
+- registry: npm
+  query: https://registry.npmjs.org/-/v1/search?text=qomplx
+  status: 200
+  result: total 0
+- registry: crates.io
+  query: https://crates.io/api/v1/crates?q=qomplx
+  status: 200
+  result: total 0
+- registry: hex.pm
+  query: https://hex.pm/api/packages/mdhc
+  status: 404
+packages:
+- name: mdtsdb
+  language: python
+  official: true
+  registry: github
+  repository: https://github.com/QOMPLX-INC/te-python-client
+  install: pip3 install .
+  version: '3.1'
+  published: '2021-11-04'
+  version_source: setup.py (name=mdtsdb, version=3.1)
+  published_source: repository pushed_at via GitHub API
+  license: NOASSERTION (All Rights Reserved, No License Granted)
+  note: >-
+    TimeEngine Python client. Not on PyPI — `pip install mdtsdb` resolves to nothing; the only
+    install path is a local checkout. Depends on requests, pika, kafka-python, websocket-client,
+    bson and prompt_toolkit.
+- name: mdtsdb-client
+  language: java
+  official: true
+  registry: github
+  repository: https://github.com/QOMPLX-INC/te-java-client
+  coordinates: com.qomplx.mdtsdb:mdtsdb-client
+  install: mvn clean install
+  version: 3.1.8
+  published: '2022-05-23'
+  version_source: pom.xml (<version>3.1.8</version>)
+  published_source: repository pushed_at via GitHub API
+  license: NOASSERTION (All Rights Reserved, No License Granted)
+  note: >-
+    TimeEngine Java client. The coordinates com.qomplx.mdtsdb:mdtsdb-client are NOT on Maven
+    Central (numFound 0), so the artifact must be built from source. Ships Keycloak-auth test
+    harness (run_test_keycloak.sh).
+- name: mdhc
+  language: erlang
+  official: true
+  registry: github
+  repository: https://github.com/QOMPLX-INC/te-erlang-client
+  install: rebar3 (library application; add as a dependency from source)
+  version: null
+  published: '2021-11-04'
+  version_source: null
+  published_source: repository pushed_at via GitHub API
+  license: NOASSERTION (All Rights Reserved, No License Granted)
+  note: >-
+    TimeEngine Erlang HTTP client. Checked, nothing to record for version — rebar.config carries
+    no published release version and the package is absent from Hex (404), so a consumer cannot
+    pin a version either. Requires Erlang/OTP R24+; selectable gun or hackney HTTP backend.
+- name: te-python-client-cases
+  language: python
+  official: true
+  registry: github
+  repository: https://github.com/QOMPLX-INC/te-python-client-cases
+  kind: examples
+  version: null
+  published: '2021-11-04'
+  version_source: null
+  published_source: repository pushed_at via GitHub API
+  license: NOASSERTION (All Rights Reserved, No License Granted)
+  note: >-
+    Sample use cases for the TimeEngine Python client — forecast, prometheus, stationary3d,
+    tasks and an interactive shell (shell/cmd.py). Not a distributable package; version is null
+    because the repository publishes no release.
+decay_signal:
+  observation: >-
+    The newest first-party client release is the Java client at 2022-05-23; the Python and
+    Erlang clients have not been touched since 2021-11-04. TimeEngine was announced as a SaaS
+    product in June 2021 and the marketing pages that described it now redirect to the QOMPLX
+    homepage, so the SDKs and the product surface they wrap appear to have decayed together.
+  newest_release: '2022-05-23'
+  oldest_release: '2021-11-04'

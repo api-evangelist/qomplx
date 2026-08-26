@@ -1,0 +1,85 @@
+generated: '2026-08-26'
+method: derived
+source: https://github.com/QOMPLX-INC/te-python-client/blob/master/mdtsdb/client.py
+name: QOMPLX conformance assertions
+summary: >-
+  Standards assertions for the TimeEngine HTTP API, derived from QOMPLX's published client
+  libraries. QOMPLX publishes no compliance page, no trust center and no certification claims
+  that could be fetched — a search of its own site found none, and every legal/policy page in its
+  sitemap 301-loops. No `Compliance` pointer is emitted.
+standards:
+- id: oauth2
+  conforms: true
+  evidence: >-
+    Keycloak-issued OAuth 2.0 client-credentials grant. The client posts
+    grant_type=client_credentials with client_id/client_secret as
+    application/x-www-form-urlencoded and sends `Authorization: Bearer <access_token>` on HTTP and
+    WebSocket requests (mdtsdb/client.py keycloak_load_access_token / keycloak_set_access_token).
+- id: oidc
+  conforms: false
+  evidence: >-
+    No OpenID Connect discovery is used and /.well-known/openid-configuration is not served on any
+    QOMPLX host (404 on www.qomplx.com). The Keycloak realm is operator-supplied.
+- id: rfc7464
+  name: JSON Text Sequences (application/json-seq)
+  conforms: true
+  evidence: >-
+    Streaming query responses are emitted as RFC 7464 json-seq with the 0x1E record separator; the
+    client cites the RFC by URL in events_query()/async_events_query() docstrings and parses the
+    separator in jsonseq_to_json() and ws_recv().
+- id: rfc9457
+  name: Problem Details for HTTP APIs
+  conforms: false
+  evidence: >-
+    Errors use a proprietary `{"error": {"code", "message", "details"}}` envelope with numeric
+    thousand-block classes, not application/problem+json. See errors/qomplx-error-codes.yml.
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key or equivalent exists. See conventions/qomplx-conventions.yml.
+- id: pagination
+  conforms: false
+  evidence: No page/cursor/limit/offset parameters; large result sets stream instead.
+- id: json:api
+  conforms: false
+  evidence: RPC-over-HTTP envelope, not JSON:API.
+- id: odata
+  conforms: false
+  evidence: No $metadata surface.
+- id: scim
+  conforms: false
+  evidence: >-
+    Key administration is a proprietary /api/v1/admin method envelope, not SCIM. No
+    urn:ietf:params:scim:schemas:* URN appears anywhere in the published clients.
+- id: fhir
+  conforms: false
+  evidence: Not a healthcare surface.
+- id: fapi
+  conforms: false
+  evidence: Not a financial-grade API surface.
+- id: psd2
+  conforms: false
+  evidence: Not a payments surface.
+- id: prometheus-remote-read-write
+  conforms: unknown
+  evidence: >-
+    QOMPLX announced a Prometheus integration for TimeEngine in 2021 and the sample-cases
+    repository carries a `prometheus/` directory, but the integration's wire protocol is not
+    published, so conformance to the Prometheus remote-read/remote-write specification cannot be
+    asserted either way. Recorded as unknown rather than guessed.
+domain_standard:
+  claimed: false
+  evidence: >-
+    No domain standard is declared by the contract. TimeEngine is a general-purpose time-series
+    engine, and the cybersecurity products it underpins (ITDR/MDR/attack-surface monitoring) expose
+    no public contract at all, so there is no STIX/TAXII, OpenC2, OCSF, SCAP or CSAF signature to
+    read. Reward-only dimension — nothing is invented to fill it.
+soap_wsdl:
+  probed: false
+  evidence: >-
+    No QOMPLX-controlled API host exists to probe with ?wsdl — the TimeEngine base URL is
+    customer-supplied. www.qomplx.com serves no SOAP surface and the published clients are HTTP/JSON
+    only.
+certifications: []
+certifications_note: >-
+  None published. QOMPLX's site carries no trust center, no compliance page and no named
+  certification (SOC 2 / ISO 27001 / PCI / HIPAA / FedRAMP); trust.qomplx.com does not resolve.

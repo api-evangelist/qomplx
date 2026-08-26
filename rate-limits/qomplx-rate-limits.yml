@@ -1,0 +1,41 @@
+generated: '2026-08-26'
+method: derived
+source: https://github.com/QOMPLX-INC/te-python-client/blob/master/mdtsdb/client.py
+name: QOMPLX TimeEngine rate limits
+summary: >-
+  QOMPLX publishes no rate-limit documentation. A per-application-key daily quota mechanism does
+  exist in the API — the admin plane sets it — but no numeric value, window, burst or response
+  header is published anywhere, so no limit can be recorded.
+limit_count: 0
+docs: null
+docs_note: >-
+  No API reference exists to search. www.qomplx.com serves no developer documentation and every
+  content page in its sitemap returns a 301 self-redirect loop.
+mechanism:
+- name: day_limit
+  scope: per application key
+  window: day
+  limit: null
+  burst: null
+  set_by: >-
+    /api/v1/admin — newApiKey and assureApiKey both send params.day_limit. The published client
+    hard-codes -1 (unlimited) in both calls, so the default any operator gets from the sample code
+    is no limit; a deployment may set a positive value.
+  evidence: mdtsdb/client.py new_appkey() and get_or_create_appkey(), params.day_limit = -1
+response_signalling:
+  headers: []
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is read by any published client. There is
+    no runtime rate-limit signal an agent could act on.
+exhaustion:
+  http_status: null
+  error_class: BadRequestError (5xxx)
+  note: >-
+    Not confirmed. The 5xxx class is documented as "request violates server limitations", which is
+    where a quota breach would most plausibly land, but QOMPLX publishes no code-level mapping, so
+    this is recorded as unconfirmed rather than asserted.
+overload_protection:
+  error_class: ServiceTimeoutError (2xxx)
+  meaning: >-
+    "Service cannot complete the request due to overload protection and/or timeouts caused by bulky
+    operations" — a published, distinct signal from quota exhaustion.

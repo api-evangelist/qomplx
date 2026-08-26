@@ -1,0 +1,49 @@
+generated: '2026-08-26'
+method: probed
+source: https://www.qomplx.com/
+name: QOMPLX .well-known probe
+summary: >-
+  Every /.well-known/ path was probed on www.qomplx.com, the only host QOMPLX operates that a
+  client can reach. Nothing is served. The TimeEngine API host is customer-supplied
+  (https://{host}:{port}/), so there is no QOMPLX-controlled API host to probe. NO WellKnown or
+  SecurityTxt pointer is emitted in apis.yml — this file records an absence, not a presence.
+  Paths returning 404 with an HTML body are the Ghost theme's 404 template, not documents.
+hosts:
+- host: www.qomplx.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /openapi.json
+    status: 404
+    file: null
+  - path: /swagger.json
+    status: 404
+    file: null
+  - path: /api-docs
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 200
+    file: null
+    note: >-
+      200 but the body is the Ghost homepage HTML shell, not an llms.txt document. Treated as a
+      miss (soft-200), per the pipeline's HTML-shell rule.

@@ -1,0 +1,63 @@
+generated: '2026-08-26'
+method: derived
+source: https://github.com/QOMPLX-INC/te-python-client/blob/master/mdtsdb/client.py
+name: QOMPLX TimeEngine lifecycle
+summary: >-
+  QOMPLX publishes no versioning policy, no deprecation policy, no changelog and no status page.
+  Everything below is either derived from the published client libraries or is a recorded
+  absence with the probe that established it.
+versioning:
+  scheme: url-path
+  current: v1
+  path: /api/v1/
+  secondary:
+    name: query-language version
+    values: [1, 2]
+    selector: '?v=2 on /api/v1/ql (client default is 1; query()/async_query() force 2)'
+  policy_url: null
+  policy_published: false
+deprecation:
+  policy_published: false
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  evidence: >-
+    No Sunset or Deprecation header is read or documented by any published client. The API surface
+    has one published major (v1) and no deprecation notices exist on any reachable QOMPLX page.
+  note: No `Deprecation` pointer is emitted in apis.yml — no policy exists to point at.
+status_page:
+  published: false
+  url: null
+  probes:
+  - url: https://status.qomplx.com/
+    status: 0
+    result: DNS does not resolve
+  - url: https://qomplx.statuspage.io/
+    status: 200
+    result: >-
+      Redirects to https://www.atlassian.com/software/statuspage — the Statuspage marketing site,
+      not a QOMPLX page. Treated as a miss.
+  note: No `StatusPage` pointer is emitted in apis.yml — QOMPLX serves no status page.
+sla:
+  published: false
+  url: https://www.qomplx.com/service-level-agreement/
+  status: 301
+  evidence: >-
+    An SLA page is listed in the sitemap at /service-level-agreement/ but returns HTTP 301 to
+    itself — an infinite self-redirect loop (verified with curl and an independent fetcher, both
+    exhausted their redirect limit). The document is not readable, so no pointer is emitted.
+changelog:
+  published: false
+  url: null
+  evidence: >-
+    No changelog, release-notes or versions page exists on www.qomplx.com or in either GitHub
+    organisation. The only dated release signal is repository push dates — see
+    packages/qomplx-packages.yml decay_signal.
+maintenance_signal:
+  newest_first_party_release: '2022-05-23'
+  note: >-
+    The newest first-party TimeEngine client commit is 2022-05-23; the marketing pages that
+    described TimeEngine as a SaaS offering now 301 to the QOMPLX homepage. The API surface is
+    still published as source, but nothing about it has moved in over four years.

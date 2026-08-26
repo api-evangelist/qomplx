@@ -1,0 +1,122 @@
+generated: '2026-08-26'
+method: derived
+source: https://github.com/QOMPLX-INC/te-python-client/blob/master/mdtsdb/client.py
+name: QOMPLX TimeEngine API conventions
+summary: >-
+  Cross-cutting runtime semantics for the TimeEngine HTTP/WebSocket API, derived from QOMPLX's
+  own published client. There is no docs site to search: www.qomplx.com serves no developer
+  documentation and every content page in its sitemap 301-loops.
+transport:
+  style: RPC-over-HTTP
+  http_method: POST for every operation (including reads)
+  note: >-
+    TimeEngine is not REST. Every call is a POST carrying a JSON or form-encoded envelope with a
+    `method` field; the URL path selects the plane (ingest / ql / result / admin / ws), not the
+    resource.
+endpoints:
+- path: /api/v1/ingest
+  purpose: Event and time-series ingestion (application/json).
+- path: /api/v1/ingest/{app_key}
+  purpose: Geo-event ingestion with the application key URL-quoted into the path.
+- path: /api/v1/ingest/kml
+  purpose: KML document ingestion (application/x-www-form-urlencoded).
+- path: /api/v1/ql
+  purpose: Query-language execution. `?v=2` selects QL version 2.
+- path: /api/v1/result
+  purpose: Retrieval of stored results from a delayed/async query, by uuid.
+- path: /api/v1/result/events
+  purpose: Diagnostic Error/Warning messages raised during storage and indexing.
+- path: /api/v1/admin
+  purpose: Key lifecycle — newApiKey, assureApiKey, deleteApiKey, newAdminKey, assureAdminKey, deleteAdminKey.
+- path: /api/v1/ws/{key}
+  purpose: WebSocket channel. `?async=1|0` selects async mode; admin connections add `?key={app_key}`.
+request_envelope:
+  shape: '{"method": <string>, "context": <"events"|...>, "key": <app_key>, "opts": [], "params": {...}}'
+  admin_variant: 'Admin calls carry params.adminkey rather than a top-level key.'
+content_types:
+- application/json (ingest)
+- application/x-www-form-urlencoded (ql, result, kml)
+authentication:
+  see: authentication/qomplx-authentication.yml
+  styles: [HMAC-SHA256 request signature (MDTSDB2), OAuth 2.0 client-credentials bearer]
+idempotency:
+  supported: false
+  header: null
+  evidence: >-
+    No Idempotency-Key or equivalent appears anywhere in the client. Ingestion is append-only
+    time-series writes, so a retried insert produces duplicate points rather than being
+    de-duplicated. Admin operations are name-addressed instead: assureApiKey / assureAdminKey are
+    get-or-create by suggested key name, which makes key creation naturally idempotent, but this
+    is a property of those two methods, not a request-level idempotency mechanism.
+  note: >-
+    No `Idempotency` pointer is emitted in apis.yml — the API does not support it.
+pagination:
+  supported: false
+  evidence: >-
+    No page/cursor/limit/offset parameters exist in the client. Result-set size is bounded inside
+    the query-language script itself, and large responses are handled by streaming rather than
+    paging.
+streaming:
+  http:
+    format: RFC 7464 application/json-seq
+    opt_in: stream=True on query calls
+    record_separator: "\\x1e"
+    helpers: jsonseq_to_json(), merge_stream_values(), get_stream_errors()
+  chunked_upload:
+    supported: true
+    method: 'client.send_events_data_chunked() — chunked transfer with a generator body'
+  websocket:
+    url: ws(s)://{host}:{port}/api/v1/ws/{key}
+    purpose: Live query/response and streaming ingest over a persistent channel.
+async_execution:
+  supported: true
+  mechanism: >-
+    A query may be answered with ("postpone", uuid). The result is retrieved later by posting the
+    uuid to /api/v1/result (client: get_stored(uuid)). WebSocket connections select async mode
+    with ?async=1.
+  explicit_calls: [async_query, async_events_query]
+versioning:
+  url_versioning: /api/v1/ (single published major)
+  query_language_versioning: 'QL v1 (default) and v2, selected per request with ?v=2'
+  see: lifecycle/qomplx-lifecycle.yml
+request_id_tracing:
+  supported: false
+  evidence: No correlation-id or request-id header is set or read by the client.
+rate_limit_signaling:
+  response_headers: none observed
+  see: rate-limits/qomplx-rate-limits.yml
+errors:
+  see: errors/qomplx-error-codes.yml
+  envelope: '{"error": {"code": <int>, "message": <string>, "details": <object>}}'
+dry_run_mode:
+  supported: false
+  evidence: No dry-run, preview, validate-only or simulate parameter exists on any call.
+reversibility:
+  state: undocumented
+  grade: none
+  rationale: >-
+    The API has a write surface, so reversibility is not `na` — but QOMPLX publishes no reversal
+    operation and no window for any of it. Recorded honestly rather than graded up.
+  write_surfaces:
+  - surface: Event / time-series ingestion (/api/v1/ingest)
+    reversal_operation: null
+    window: null
+    note: >-
+      Append-only. The client exposes no delete, void, undo or retention-trim call, and the
+      query language's mutation surface is not publicly documented, so an agent cannot establish
+      whether an ingested point can be removed.
+  - surface: Application key deletion (deleteApiKey)
+    reversal_operation: null
+    window: null
+    note: >-
+      Irreversible as published. The call accepts an optional `keep_data: true` flag which
+      preserves the tenant's stored data past key deletion — that is data preservation, not a
+      restore path, and no re-attach operation is documented. Recreating the same key name with
+      assureApiKey is documented as returning an error when the key belongs to another admin key.
+  - surface: Admin key deletion (deleteAdminKey)
+    reversal_operation: null
+    window: null
+    note: Irreversible as published. Requires an admin key with super-user rights.
+  no_invented_windows: >-
+    No retention or restore window is stated in any QOMPLX-published material, so none is
+    recorded here.

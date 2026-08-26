@@ -1,23 +1,124 @@
 aid: qomplx
 name: Qomplx
-description: 'Qomplx is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  QOMPLX, Inc. is a Reston, Virginia research and technology company building risk-analytics
+  and cybersecurity products — Identity Threat Detection and Response (ITDR) for Active
+  Directory and cloud credentials, Managed Detection and Response (MDR), attack-surface
+  monitoring, Active Directory security assessment, offensive security services and vCISO
+  engagements — sold into finance, legal and insurance. Its underlying data platform,
+  QOMPLX:OS (Q:OS), includes TimeEngine, a multi-dimensional time-series database and
+  analytics engine that QOMPLX exposes over an HTTP and WebSocket interface. QOMPLX publishes
+  first-party TimeEngine client libraries for Python, Java and Erlang on GitHub, but ships no
+  OpenAPI, AsyncAPI, GraphQL SDL or Postman collection, and operates no public developer
+  portal, API reference or pricing page. As of this pass its own website has been reduced to a
+  single-page Ghost install and every content page listed in its sitemap returns a 301
+  self-redirect loop.
 url: https://raw.githubusercontent.com/api-evangelist/qomplx/refs/heads/main/apis.yml
+image: https://www.qomplx.com/favicon.png
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
 - Company
-apis: []
+- Cybersecurity
+- Identity Threat Detection
+- Managed Detection and Response
+- Attack Surface Management
+- Time Series
+- Analytics
+- Risk Management
+- Insurance
+- Data Platform
+apis:
+- aid: qomplx-timeengine
+  name: QOMPLX TimeEngine HTTP API
+  description: >-
+    TimeEngine (package name `mdtsdb`) is QOMPLX's multi-dimensional time-series database and
+    analytics engine. It exposes an HTTP interface for event ingestion (`/api/v1/ingest`),
+    query-language execution (`/api/v1/ql`), delayed/async result retrieval (`/api/v1/result`),
+    key administration (`/api/v1/admin`) and a WebSocket streaming channel (`/api/v1/ws/{key}`).
+    Requests are authenticated with an application or admin key plus an HMAC-SHA256 request
+    signature, or with a Keycloak-issued OAuth 2.0 client-credentials bearer token. The surface
+    documented here is derived from QOMPLX's own published client libraries; QOMPLX publishes no
+    machine-readable specification for it.
+  humanURL: https://github.com/QOMPLX-INC/te-python-client
+  baseURL: https://{host}:{port}/api/v1
+  tags:
+  - Time Series
+  - Analytics
+  - Data Platform
+  properties:
+  - type: SourceCode
+    url: https://github.com/QOMPLX-INC/te-python-client
+  - type: Authentication
+    url: authentication/qomplx-authentication.yml
+  - type: ErrorCatalog
+    url: errors/qomplx-error-codes.yml
+  - type: Conventions
+    url: conventions/qomplx-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/qomplx-lifecycle.yml
+  - type: RateLimits
+    url: rate-limits/qomplx-rate-limits.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/qomplx-domain-security.yml
 - type: Website
-  url: https://forgeglobal.com/qomplx_stock/
+  url: https://www.qomplx.com/
+- type: GitHubOrganization
+  url: https://github.com/QOMPLX-INC
+- type: Packages
+  url: packages/qomplx-packages.yml
+- type: SDKs
+  url: packages/qomplx-packages.yml
+- type: Authentication
+  url: authentication/qomplx-authentication.yml
+- type: ErrorCatalog
+  url: errors/qomplx-error-codes.yml
+- type: Conventions
+  url: conventions/qomplx-conventions.yml
+- type: Lifecycle
+  url: lifecycle/qomplx-lifecycle.yml
+- type: Conformance
+  url: conformance/qomplx-conformance.yml
+- type: RateLimits
+  url: rate-limits/qomplx-rate-limits.yml
+- type: Plans
+  url: plans/qomplx-plans-pricing.yml
+- type: LLMsTxt
+  url: llms/qomplx-llms.txt
+x-enrichment:
+  date: '2026-08-26'
+  status: minimal
+  artifacts_added: 11
+  pass: local-v1
+x-coverage:
+  state: unreadable
+  reason: no-machine-readable-spec
+  detail: >-
+    QOMPLX's only published API contract is the source of three first-party TimeEngine client
+    libraries on GitHub — there is no OpenAPI, AsyncAPI, GraphQL SDL or Postman collection
+    anywhere, and www.qomplx.com is now a single-page Ghost install where every content page in
+    its own sitemap, including the terms of service, SLA and vulnerability-disclosure policy,
+    returns a 301 self-redirect loop.
+  evidence:
+  - url: https://www.qomplx.com/openapi.json
+    status: 404
+  - url: https://www.qomplx.com/llms.txt
+    status: 200
+  - url: https://www.qomplx.com/vulnerability-disclosure-policy/
+    status: 301
+  - url: https://www.qomplx.com/service-level-agreement/
+    status: 301
+  - url: https://www.qomplx.com/pricing/
+    status: 404
+  - url: https://github.com/QOMPLX-INC/te-python-client
+    status: 200
+  checked: '2026-08-26'

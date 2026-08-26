@@ -1,0 +1,82 @@
+generated: '2026-08-26'
+method: derived
+source: https://github.com/QOMPLX-INC/te-python-client/blob/master/mdtsdb/client.py
+name: QOMPLX MCP surface
+status: candidate
+summary: >-
+  QOMPLX ships no MCP server. No hosted endpoint, no npx/pip package, no mention in any GitHub
+  repository or on any reachable QOMPLX page. The tools below are a DERIVED candidate set — what an
+  MCP server over the TimeEngine HTTP API would expose — recorded so the gap is legible. They are
+  not implemented by anyone and no `MCPServer` pointer is emitted in apis.yml, because emitting one
+  would credit QOMPLX with an agent surface it does not serve.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: derived
+search_evidence:
+- source: github.com/QOMPLX-INC repositories
+  result: 5 repos, none MCP-related (polynote fork, 3 TimeEngine clients, sample cases)
+- source: github.com/qomplx repositories
+  result: 5 repos, none MCP-related
+- url: https://www.qomplx.com/.well-known/ai-plugin.json
+  status: 404
+- url: https://www.qomplx.com/llms.txt
+  status: 200
+  result: HTML shell, not a document — no tool list published
+candidate_tools:
+- name: timeengine_ingest_events
+  backing_endpoint: POST /api/v1/ingest
+  description: Write time-series / sensor events into TimeEngine for an application key.
+  consequence: write
+- name: timeengine_ingest_geo_events
+  backing_endpoint: POST /api/v1/ingest/{app_key}
+  description: Write geo-tagged events.
+  consequence: write
+- name: timeengine_ingest_kml
+  backing_endpoint: POST /api/v1/ingest/kml
+  description: Ingest a KML document.
+  consequence: write
+- name: timeengine_query
+  backing_endpoint: POST /api/v1/ql
+  description: Execute a TimeEngine query-language script (QL v1 or v2) and return results.
+  consequence: read
+- name: timeengine_query_async
+  backing_endpoint: POST /api/v1/ql?async=1
+  description: Submit a query for deferred execution; returns a uuid handle.
+  consequence: read
+- name: timeengine_get_stored_result
+  backing_endpoint: POST /api/v1/result
+  description: Retrieve the result of a deferred query by uuid.
+  consequence: read
+- name: timeengine_get_messages
+  backing_endpoint: POST /api/v1/result/events
+  description: Retrieve storage/indexing diagnostic warnings and errors.
+  consequence: read
+- name: timeengine_ping
+  backing_endpoint: POST /api/v1/ql (method=ping)
+  description: Health check the ingestion service for an application key.
+  consequence: read
+- name: timeengine_create_app_key
+  backing_endpoint: POST /api/v1/admin (newApiKey / assureApiKey)
+  description: Create or get-or-create a tenant application key. Requires an admin key.
+  consequence: admin
+- name: timeengine_delete_app_key
+  backing_endpoint: POST /api/v1/admin (deleteApiKey)
+  description: Delete an application key, optionally retaining its data.
+  consequence: destructive
+  reversibility: none published — see conventions/qomplx-conventions.yml
+- name: timeengine_manage_admin_key
+  backing_endpoint: POST /api/v1/admin (newAdminKey / assureAdminKey / deleteAdminKey)
+  description: Admin-key lifecycle. Requires super-user rights.
+  consequence: destructive
+  reversibility: none published
+input_schemas: >-
+  Not derivable. QOMPLX publishes no OpenAPI, so no parameter schema exists to inherit. Parameter
+  names above are read from the published client method signatures only.
+crosswalk_note: >-
+  No mcp/qomplx-tool-crosswalk.yml is written. A crosswalk binds real MCP tools to real OpenAPI
+  operationIds; QOMPLX has neither, so a crosswalk here would be two derived lists mapped to each
+  other rather than a measurement.

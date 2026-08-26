@@ -1,0 +1,28 @@
+generated: '2026-08-26'
+method: probed
+source: https://www.qomplx.com/
+name: QOMPLX plans and pricing
+summary: >-
+  QOMPLX publishes no pricing at all. There is no pricing page, no plan table, no free tier and no
+  self-serve sign-up; the company sells ITDR, MDR, attack-surface monitoring, Active Directory
+  assessments, offensive security services and vCISO engagements through a sales motion. The
+  TimeEngine API is delivered inside those engagements rather than sold as a metered product.
+plan_count: 0
+currency: null
+free_tier: false
+self_serve_signup: false
+sales_gated: true
+probes:
+- url: https://www.qomplx.com/pricing/
+  status: 404
+- url: https://www.qomplx.com/request-a-demo/
+  status: 301
+  note: Listed in the sitemap; returns a 301 self-redirect loop and is not readable.
+- url: https://www.qomplx.com/request-a-meeting/
+  status: 301
+  note: Listed in the sitemap; returns a 301 self-redirect loop and is not readable.
+plans: []
+note: >-
+  Recorded as an explicit zero, not an omission. Even the contact-sales pages QOMPLX advertises in
+  its own sitemap are unreachable, so there is currently no published route to a commercial
+  conversation either.

@@ -1,0 +1,70 @@
+generated: '2026-08-26'
+method: derived
+source: https://github.com/QOMPLX-INC/te-python-client/blob/master/mdtsdb/client.py
+name: QOMPLX TimeEngine authentication
+summary: >-
+  Derived from QOMPLX's own published TimeEngine Python client. QOMPLX publishes no OpenAPI and
+  no auth documentation page, so every scheme below was read from first-party client source
+  (mdtsdb/client.py) rather than from a docs page. TimeEngine supports two mutually exclusive
+  request-authentication models: a keyed HMAC-SHA256 request signature, and a Keycloak-issued
+  OAuth 2.0 bearer token.
+docs: null
+docs_note: >-
+  No public authentication reference exists. www.qomplx.com serves no developer documentation;
+  every content page in its sitemap returns a 301 self-redirect loop.
+schemes:
+- id: mdtsdb-signature
+  type: apiKey-signed
+  in: header
+  header: Authorization
+  scheme_prefix: MDTSDB2
+  description: >-
+    The default scheme. The caller holds an application key (tenant-scoped) or an admin key
+    (key-management scoped) together with a secret key. The Authorization header carries the
+    key identifier plus an HMAC-SHA256 signature.
+  signature:
+    algorithm: HMAC-SHA256
+    derivation: >-
+      A signing key is derived by chained HMAC-SHA256 over the timestamp then the method name,
+      seeded with the secret key.
+    canonical_request: "'/' + uri + '\\n' + content_type + '\\n' + sha256(payload)"
+    signed_string: "timestamp + '\\n' + user_key + '\\n' + sha256(canonical_request)"
+    timestamp: "unix seconds integer-divided by 1000 (str(int(time.time()) // 1000))"
+    replay_window_note: >-
+      The timestamp is coarse by construction (seconds // 1000, roughly 16.7-minute buckets),
+      which is what the client transmits; the server-side tolerance is not published.
+  keys:
+  - name: app_key
+    scope: tenant data plane — ingest, query, delayed results, websocket
+  - name: admin_key
+    scope: control plane — /api/v1/admin key lifecycle; also usable on the data plane
+  - name: secret_key
+    scope: signing material for whichever key is presented; never transmitted
+- id: keycloak-oauth2
+  type: oauth2
+  flow: clientCredentials
+  description: >-
+    An alternative to request signing. The client posts client_id/client_secret with
+    grant_type=client_credentials, application/x-www-form-urlencoded, to a caller-supplied
+    Keycloak token endpoint, then sends `Authorization: Bearer <access_token>` on HTTP and
+    WebSocket requests. The token endpoint URL is deployment-specific and is passed to the
+    client constructor as auth_url.
+  token_endpoint: null
+  token_endpoint_note: >-
+    Deployment-specific (Keycloak realm chosen by the operator); QOMPLX publishes no hosted
+    token endpoint.
+  scopes_published: false
+  refresh: >-
+    The client re-requests a token via keycloak_update_access_token() when a response is
+    classified as an authorization error.
+mutual_tls: false
+openid_connect: false
+transport:
+  https_supported: true
+  https_default: false
+  note: >-
+    The client defaults to plain HTTP (is_https=False, host=127.0.0.1, port=8080). TLS is
+    opt-in and depends on the operator's deployment.
+websocket_auth: >-
+  The same two schemes apply to ws(s)://{host}:{port}/api/v1/ws/{key} — either an
+  `authorization: Bearer <token>` header or `authorization: MDTSDB2<key> <signature>`.

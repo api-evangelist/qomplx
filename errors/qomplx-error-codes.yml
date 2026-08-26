@@ -1,0 +1,99 @@
+generated: '2026-08-26'
+method: derived
+source: https://github.com/QOMPLX-INC/te-python-client/blob/master/mdtsdb/exceptions.py
+name: QOMPLX TimeEngine error codes
+summary: >-
+  TimeEngine publishes a numeric error-code registry organised into nine thousand-blocks. The
+  registry below is transcribed from QOMPLX's own client (mdtsdb/exceptions.py), which maps
+  `floor(code / 1000)` onto a typed exception and carries the class docstring verbatim. The
+  individual codes inside each block are not published anywhere public; only the classes are.
+format: proprietary
+rfc9457: false
+envelope:
+  shape: '{"error": {"code": <int>, "message": <string>, "details": <object|string>}}'
+  detection: >-
+    The client treats a response as an error when the parsed body carries an `error` key; it
+    returns the tuple ("error", details) and raise_by_code() converts it to a typed exception.
+  content_type: application/json
+  streaming_note: >-
+    Streamed (RFC 7464 json-seq) responses carry per-record errors; the client's
+    get_stream_errors() collects them from the parsed stream rather than raising.
+  special_case:
+    message: the job is postponed
+    meaning: >-
+      Not an error. The server has deferred the query; details.uuid is a handle to poll with
+      GET-equivalent POST to /api/v1/result (client: get_stored(uuid)).
+classes:
+- range: 1000-1999
+  id: PermissionDeniedError
+  title: Permission denied
+  meaning: Incorrect authentication or the request fails the permission checks.
+  remediation: >-
+    Re-derive the request signature (uri, content-type and payload hash must match exactly), or
+    refresh the Keycloak bearer token. Confirm the key presented has the plane it needs — admin
+    operations require an admin key.
+- range: 2000-2999
+  id: ServiceTimeoutError
+  title: Service timeout
+  meaning: >-
+    Service cannot complete the request due to overload protection and/or timeouts caused by
+    bulky operations.
+  remediation: >-
+    Reduce the query or ingest batch size, or use the async variants (async=1 / async_query)
+    and retrieve results later by uuid.
+- range: 3000-3999
+  id: ProtocolError
+  title: Protocol error
+  meaning: >-
+    Error in protocol between client and server — e.g. wrong method name, invalid parameter
+    value.
+  remediation: Correct the method name or parameter shape; not retryable as sent.
+- range: 4000-4999
+  id: QlError
+  title: Query-language error
+  meaning: Interpretation of the query-language script fails.
+  remediation: >-
+    Fix the QL script. Each statement must end in a semicolon; confirm the QL version (v=1 or
+    v=2) matches the syntax used.
+- range: 5000-5999
+  id: BadRequestError
+  title: Bad request
+  meaning: Request violates server limitations or refers to invalid entities.
+  remediation: Check entity identifiers and any configured per-key limits.
+- range: 6000-6999
+  id: DbError
+  title: Database layer error
+  meaning: DB layer error.
+  remediation: Server-side; retry with backoff and escalate if persistent.
+- range: 7000-7999
+  id: AmqpError
+  title: AMQP error
+  meaning: AMQP error (the messaging layer behind ingestion).
+  remediation: Server-side; retry with backoff.
+- range: 8000-8999
+  id: DataFormatError
+  title: Data format error
+  meaning: Data sent to be stored have invalid format.
+  remediation: >-
+    Validate the payload against the sensor/time-series shape the ingest endpoint expects
+    before resending; the record is rejected, not partially stored.
+- range: 9000-9999
+  id: GeneralError
+  title: General error
+  meaning: >-
+    Problems with general availability of the service, or an error without details useful to
+    the client side.
+  remediation: Retry with backoff; no client-side fix is derivable from the response.
+transport_exceptions:
+- id: ConnectionError
+  meaning: Connection problems reaching the TimeEngine host. Raised by the client, not the server.
+- id: NotFound
+  http_status: 404
+- id: Unauthorized
+  http_status: 401
+- id: Forbidden
+  http_status: 403
+coverage_note: >-
+  Nine error classes captured. Individual numeric codes and their messages are not published by
+  QOMPLX; a full catalog would require an authenticated deployment. Nothing here is inferred —
+  every title and meaning is the docstring QOMPLX shipped.
