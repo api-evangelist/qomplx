@@ -14,6 +14,18 @@ description: >-
   single-page Ghost install and every content page listed in its sitemap returns a 301
   self-redirect loop.
 url: https://raw.githubusercontent.com/api-evangelist/qomplx/refs/heads/main/apis.yml
+deliveryModel:
+  model: unknown
+  open_source: unknown
+  commercial: true
+  callable_host: false
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - pricing
+  - repository-unlicensed
+  generated: '2026-08-28'
+  method: derived
 image: https://www.qomplx.com/favicon.png
 x-type: company
 x-source: harvest:secondary-market
