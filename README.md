@@ -64,5 +64,103 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Qomplx is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/qomplx_stock/
+QOMPLX, Inc. is a Reston, Virginia research and technology company building risk-analytics and cybersecurity products — Identity Threat Detection and Response (ITDR) for Active Directory and cloud credentials, Managed Detection and Response (MDR), attack-surface monitoring, Active Directory security assessment, offensive security services and vCISO engagements — sold into finance, legal and insurance. Its underlying data platform, QOMPLX:OS (Q:OS), includes TimeEngine, a multi-dimensional time-series database and analytics engine that QOMPLX exposes over an HTTP and WebSocket interface. QOMPLX publishes first-party TimeEngine client libraries for Python, Java and Erlang on GitHub, but ships no OpenAPI, AsyncAPI, GraphQL SDL or Postman collection, and operates no public developer portal, API reference or pricing page. As of this pass its own website has been reduced to a single-page Ghost install and every content page listed in its sitemap returns a 301 self-redirect loop.
+
+**Areas:** Company · Cybersecurity · Identity Threat Detection · Managed Detection and Response · Attack Surface Management · Time Series · Analytics · Risk Management · Insurance · Data Platform
+
+## Qomplx on APIs.io
+
+Everything profiled for Qomplx is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/qomplx/](https://apis.io/providers/qomplx/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [QOMPLX TimeEngine HTTP API](https://apis.io/apis/qomplx/qomplx-timeengine/) — TimeEngine (package name `mdtsdb`) is QOMPLX's multi-dimensional time-series database and analytics engine. It exposes an HTTP interface for event ingestion…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [QOMPLX MCP surface](https://apis.io/servers/qomplx/qomplx-mcp-surface/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Qomplx Authentication](https://apis.io/security/qomplx/qomplx-authentication/)
+- [Qomplx Domain Security](https://apis.io/security/qomplx/qomplx-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Qomplx Plans Pricing](https://apis.io/plans/qomplx/qomplx-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Qomplx Rate Limits](https://apis.io/rate-limits/qomplx/qomplx-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.qomplx.com/)
+- [GitHub](https://github.com/QOMPLX-INC)
+
+## API Evangelist rating
+
+**Kin Score 11.0** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 0.0 |
+| Contract governance | 4.5 |
+| Operational transparency | 2.6 |
+| Developer ergonomics | 19.0 |
+| Access clarity | 0.0 |
+
+**Agent readiness 3.9** — human-only
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 14.9** — Insurance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/qomplx/](https://apis.io/providers/qomplx/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Qomplx: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/qomplx/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
